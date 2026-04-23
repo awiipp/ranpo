@@ -14,7 +14,7 @@ func EnvDir() string {
 	return filepath.Join(config.Dir(), "environments")
 }
 
-func SaveEnv(env *models.Environtment) error {
+func SaveEnv(env *models.Environment) error {
 	if err := os.MkdirAll(EnvDir(), 0755); err != nil {
 		return nil
 	}
@@ -27,7 +27,7 @@ func SaveEnv(env *models.Environtment) error {
 	return os.WriteFile(filepath.Join(EnvDir(), sanitize(env.Name)+".json"), data, 0644)
 }
 
-func LoadEnv(name string) (*models.Environtment, error) {
+func LoadEnv(name string) (*models.Environment, error) {
 	path := filepath.Join(EnvDir(), sanitize(name)+".json")
 
 	data, err := os.ReadFile(path)
@@ -35,7 +35,7 @@ func LoadEnv(name string) (*models.Environtment, error) {
 		return nil, err
 	}
 
-	var env models.Environtment
+	var env models.Environment
 	return &env, json.Unmarshal(data, &env)
 }
 
