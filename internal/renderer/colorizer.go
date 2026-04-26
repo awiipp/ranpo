@@ -6,14 +6,15 @@ func colorizeJSON(s string) string {
 	var out bytes.Buffer
 	runes := []rune(s)
 	i := 0
-	isKey := true // first string in an object is always a key
+
+	isKey := true
+	var stack []rune
 
 	for i < len(runes) {
 		ch := runes[i]
 
 		switch {
 		case ch == '"':
-			// Collect entire string token including quotes
 			start := i
 			i++
 
@@ -25,7 +26,8 @@ func colorizeJSON(s string) string {
 			}
 
 			token := string(runes[start : i+1])
-			if isKey {
+
+			if isKey && len(stack) > 0 && stack[len(stack)-1] == '{' {
 				out.WriteString(keyStyle.Render(token))
 				isKey = false
 			} else {
@@ -38,25 +40,27 @@ func colorizeJSON(s string) string {
 		case ch == ':':
 			out.WriteString(punctStyle.Render(":"))
 
-		case ch == '{' || ch == '[':
-			isKey = (ch == '{')
-			out.WriteString(punctStyle.Render(string(ch)))
+		case ch == '{':
+			stack = append(stack, '{')
+			isKey = true
+			out.WriteString(punctStyle.Render("{"))
+
+		case ch == '[':
+			stack = append(stack, '[')
+			isKey = false
+			out.WriteString(punctStyle.Render("["))
 
 		case ch == '}' || ch == ']':
+			if len(stack) > 0 {
+				stack = stack[:len(stack)-1]
+			}
 			out.WriteString(punctStyle.Render(string(ch)))
 
 		case ch == ',':
 			out.WriteString(punctStyle.Render(","))
-			// After a comma in an object context, next string is a key
-			// This detected by looking ahead for the next "
-			for j := i + 1; j < len(runes); j++ {
-				if runes[j] == '"' {
-					isKey = true
-					break
-				}
-				if runes[j] != ' ' && runes[j] != '\n' && runes[j] != '\r' && runes[j] != '\t' {
-					break
-				}
+
+			if len(stack) > 0 && stack[len(stack)-1] == '{' {
+				isKey = true
 			}
 
 		case i+4 <= len(runes) && string(runes[i:i+4]) == "true":
