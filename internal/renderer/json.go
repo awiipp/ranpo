@@ -4,8 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
 )
+
+var trailingComma = regexp.MustCompile(`,\s*([\]}])`)
 
 // StatusLine renders a colored status code + metadata line.
 func StatusLine(code int, status string, duration fmt.Stringer, bodyLen int) string {
@@ -30,12 +33,14 @@ func StatusLine(code int, status string, duration fmt.Stringer, bodyLen int) str
 
 // PrettyJSON formats and colorizes raw JSON bytes.
 func PrettyJSON(data []byte) string {
+	clean := trailingComma.ReplaceAll(bytes.TrimSpace(data), []byte("${1}"))
+
 	var buf bytes.Buffer
-	if err := json.Indent(&buf, data, "", "  "); err != nil {
+	if err := json.Indent(&buf, clean, "", "  "); err != nil {
 		return string(data)
 	}
 
-	return colorizeJSON(buf.String())
+	return colorizeJSON(strings.TrimRight(buf.String(), "\n"))
 }
 
 // RenderResponse builds the complete formatted response string for CLI output
@@ -43,7 +48,10 @@ func RenderResponse(code int, status string, body []byte, duration fmt.Stringer)
 	divider := dimStyle.Render(strings.Repeat("─", 56))
 	statusLine := StatusLine(code, status, duration, len(body))
 
-	return fmt.Sprintf("\n%s\n%s\n\n%s\n", statusLine, divider, PrettyJSON(body))
+	const bodyIndent = "  "
+	formattedBody := indentBlock(PrettyJSON(body), bodyIndent)
+
+	return fmt.Sprintf("\n%s\n%s\n\n%s\n", statusLine, divider, formattedBody)
 }
 
 // HeadersView formats response headers for display.
@@ -56,4 +64,17 @@ func HeadersView(headers map[string][]string) string {
 		sb.WriteString("\n")
 	}
 	return sb.String()
+}
+
+func indentBlock(s string, indent string) string {
+	lines := strings.Split(s, "\n")
+
+	for i, line := range lines {
+		if strings.TrimSpace(line) == "" {
+			continue
+		}
+		lines[i] = indent + line
+	}
+
+	return strings.Join(lines, "\n")
 }
