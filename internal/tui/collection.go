@@ -117,21 +117,19 @@ func (m CollectionModel) View() string {
 		colLines := m.renderCollections(leftWidth)
 		reqLines := m.renderRequests()
 
-		maxLen := len(colLines)
-		if len(reqLines) > maxLen {
-			maxLen = len(reqLines)
-		}
+		maxLen := max(len(colLines), len(reqLines))
 
-		for i := 0; i < maxLen; i++ {
+		for i := range maxLen {
 			left := ""
 			if i < len(colLines) {
 				left = colLines[i]
 			}
+
 			right := ""
 			if i < len(reqLines) {
 				right = reqLines[i]
 			}
-			// pad left column
+
 			leftPadded := fmt.Sprintf("%-*s", leftWidth+10, left)
 			sb.WriteString("  " + leftPadded + "  " + right + "\n")
 		}
