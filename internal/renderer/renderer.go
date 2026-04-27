@@ -7,7 +7,7 @@ import (
 
 // RenderResponse builds the complete formatted response string for CLI output
 func RenderResponse(code int, status string, body []byte, duration fmt.Stringer) string {
-	divider := dimStyle.Render(strings.Repeat("─", 56))
+	divider := dimStyle.Render(strings.Repeat("─", 70))
 	statusLine := StatusLine(code, status, duration, len(body))
 
 	const bodyIndent = "  "

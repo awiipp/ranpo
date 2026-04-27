@@ -1,1 +1,2 @@
-- create internal/tui/style.go
+### Next Feature
+- Auto closing and indentation in JSON Body request.

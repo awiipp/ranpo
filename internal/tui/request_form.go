@@ -158,7 +158,7 @@ func (m RequestFormModel) View() string {
 	var sb strings.Builder
 	sb.WriteString("\n")
 	sb.WriteString("  " + titleStyle.Render("ranpo") + "  " + methodBadge(m.method) + "\n")
-	sb.WriteString("  " + dividerLine(48) + "\n\n")
+	sb.WriteString("  " + dividerLine(70) + "\n\n")
 
 	sb.WriteString(m.renderInput("URL", m.urlInput.View(), m.focused == fieldURL))
 	sb.WriteString(m.renderInput("Token", m.tokenInput.View(), m.focused == fieldToken))

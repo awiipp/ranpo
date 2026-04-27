@@ -86,7 +86,7 @@ func (m HomeModel) View() string {
 	sb.WriteString("\n")
 	sb.WriteString("  " + titleStyle.Render("ranpo") + "  " + dimStyle.Render("api testing tool") + "\n")
 	sb.WriteString("  " + dimStyle.Render("env: ") + successStyle.Render(activeEnv) + envDetail + "\n")
-	sb.WriteString("  " + dividerLine(48) + "\n\n")
+	sb.WriteString("  " + dividerLine(70) + "\n\n")
 
 	for i, item := range menuItems {
 		var line string
