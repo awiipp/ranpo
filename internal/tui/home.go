@@ -1,6 +1,12 @@
 package tui
 
-import tea "github.com/charmbracelet/bubbletea"
+import (
+	"strings"
+
+	"github.com/awiipp/ranpo/internal/config"
+	"github.com/awiipp/ranpo/internal/store"
+	tea "github.com/charmbracelet/bubbletea"
+)
 
 type menuItem struct {
 	key    string
@@ -63,6 +69,58 @@ func (m HomeModel) Update(msg tea.Msg) (HomeModel, tea.Cmd) {
 	}
 
 	return m, nil
+}
+
+func (m HomeModel) View() string {
+	cfg, _ := config.Load()
+	activeEnv := cfg.ActiveEnv
+
+	envDetail := ""
+	if env, err := store.LoadEnv(activeEnv); err == nil {
+		if base, ok := env.Variables["BASE_URL"]; ok {
+			envDetail = dimStyle.Render("  " + base)
+		}
+	}
+
+	var sb strings.Builder
+	sb.WriteString("\n")
+	sb.WriteString("  " + titleStyle.Render("ranpo") + "  " + dimStyle.Render("api testing tool") + "\n")
+	sb.WriteString("  " + dimStyle.Render("env: ") + successStyle.Render(activeEnv) + envDetail + "\n")
+	sb.WriteString("  " + dividerLine(48) + "\n\n")
+
+	for i, item := range menuItems {
+		var line string
+		isSel := i == m.cursor
+
+		prefix := "  "
+		if isSel {
+			prefix = selectedItemStyle.Render("❯ ")
+		}
+
+		var badge string
+		if item.method != "" {
+			badge = methodBadge(item.label)
+		} else {
+			if isSel {
+				badge = selectedItemStyle.Render(item.label)
+			} else {
+				badge = normalItemStyle.Render(item.label)
+			}
+		}
+
+		desc := dimmerStyle.Render(item.desc)
+		if isSel {
+			desc = dimStyle.Render(item.desc)
+		}
+
+		line = prefix + badge + "  " + desc
+		sb.WriteString(line + "\n")
+	}
+
+	sb.WriteString("\n")
+	sb.WriteString(helpBar("↑↓ jk", "navigate", "enter", "select", "q", "quit"))
+
+	return sb.String()
 }
 
 func navCmd(screen Screen, method string) tea.Cmd {
