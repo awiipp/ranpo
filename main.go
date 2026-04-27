@@ -1,18 +1,15 @@
 package main
 
-import (
-	"log"
-
-	"github.com/awiipp/ranpo/internal/tui"
-	tea "github.com/charmbracelet/bubbletea"
-)
+import "github.com/awiipp/ranpo/cmd"
 
 func main() {
-	p := tea.NewProgram(tui.NewApp())
+	cmd.Execute()
 
-	if _, err := p.Run(); err != nil {
-		log.Fatal(err)
-	}
+	// p := tea.NewProgram(tui.NewApp())
+
+	// if _, err := p.Run(); err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	// body := []byte(`{
 	// 	"name": "Nelsi Cornelia",
