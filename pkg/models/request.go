@@ -7,5 +7,5 @@ type Request struct {
 	URL     string            `json:"url"`
 	Headers map[string]string `json:"headers,omitempty"`
 	Body    string            `json:"body,omitempty"`
-	Auth    *AuthConfig       `json:"auth,omitempty"` // pointer so that can use omitempty.
+	Auth    AuthConfig        `json:"auth"`
 }

@@ -25,6 +25,10 @@ func NewCollectionModel() CollectionModel {
 	return CollectionModel{}
 }
 
+func (m CollectionModel) Init() tea.Cmd {
+	return m.loadCollections()
+}
+
 func (m CollectionModel) Update(msg tea.Msg) (CollectionModel, tea.Cmd) {
 	switch msg := msg.(type) {
 

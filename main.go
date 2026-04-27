@@ -1,25 +1,31 @@
 package main
 
 import (
-	"fmt"
-	"time"
+	"log"
 
-	"github.com/awiipp/ranpo/internal/renderer"
+	"github.com/awiipp/ranpo/internal/tui"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 func main() {
-	body := []byte(`{
-		"name": "Nelsi Cornelia",
-		"age": 18,
-		"cute": true
-		}`)
+	p := tea.NewProgram(tui.NewApp())
 
-	output := renderer.RenderResponse(
-		200,
-		"200 OK",
-		body,
-		time.Since(time.Now().Add(-150*time.Millisecond)),
-	)
+	if _, err := p.Run(); err != nil {
+		log.Fatal(err)
+	}
 
-	fmt.Println(output)
+	// body := []byte(`{
+	// 	"name": "Nelsi Cornelia",
+	// 	"age": 18,
+	// 	"cute": true
+	// 	}`)
+
+	// output := renderer.RenderResponse(
+	// 	200,
+	// 	"200 OK",
+	// 	body,
+	// 	time.Since(time.Now().Add(-150*time.Millisecond)),
+	// )
+
+	// fmt.Println(output)
 }

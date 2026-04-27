@@ -17,7 +17,7 @@ type ResponseModel struct {
 	tab      int // 0 = body, 1 = headers
 }
 
-func newResponseModel(resp *models.Response, w int, h int) ResponseModel {
+func NewResponseModel(resp *models.Response, w int, h int) ResponseModel {
 	vp := viewport.New(w-4, h-6)
 	m := ResponseModel{resp: resp, viewport: vp, ready: true}
 
