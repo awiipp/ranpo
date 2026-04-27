@@ -11,6 +11,7 @@ import (
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type formField int
@@ -44,18 +45,18 @@ func NewRequestFormModel(method string) RequestFormModel {
 	url := textinput.New()
 	url.Placeholder = "https://api.example.com/path  or  {{BASE_URL}}/path"
 	url.Focus()
-	url.Width = 62
+	url.Width = 66
 	url.TextStyle = brightStyle
 
 	token := textinput.New()
 	token.Placeholder = "leave empty to use env TOKEN"
-	token.Width = 62
+	token.Width = 66
 	token.EchoMode = textinput.EchoPassword
 	token.EchoCharacter = '•'
 
 	save := textinput.New()
 	save.Placeholder = "name to save (leave empty to skip)"
-	save.Width = 62
+	save.Width = 66
 
 	body := textarea.New()
 	body.Placeholder = "{\n  \"key\": \"value\"\n}"
@@ -190,7 +191,7 @@ func (m RequestFormModel) renderInput(lbl, content string, focused bool) string 
 		box = blurredBorderStyle.Render(content)
 	}
 
-	return "  " + l + "\n" + "  " + box + "\n\n"
+	return "  " + l + "\n" + lipgloss.NewStyle().PaddingLeft(2).Render(box) + "\n\n"
 }
 
 func (m RequestFormModel) renderBody() string {
@@ -202,7 +203,7 @@ func (m RequestFormModel) renderBody() string {
 		box = focusedBorderStyle.Render(m.bodyArea.View())
 	}
 
-	return "  " + lbl + "\n" + "  " + box + "\n\n"
+	return "  " + lbl + "\n" + lipgloss.NewStyle().PaddingLeft(2).Render(box) + "\n\n"
 }
 
 func (m RequestFormModel) doSend() tea.Cmd {
