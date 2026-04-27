@@ -84,7 +84,7 @@ func statusBadge(code int) string {
 func helpBar(pairs ...string) string {
 	var parts []string
 	for i := 0; i+1 < len(pairs); i += 2 {
-		parts = append(parts, dimStyle.Render(": ")+mutedStyle.Render(pairs[i+1]))
+		parts = append(parts, dimStyle.Render(pairs[i])+dimmerStyle.Render(": ")+mutedStyle.Render(pairs[i+1]))
 	}
 
 	return helpStyle.Render("  "+strings.Join(parts, "   ")) + "\n"
