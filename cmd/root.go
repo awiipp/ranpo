@@ -40,7 +40,7 @@ var (
 )
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&flagToken, "token", "t", "", "Bearer token (overrides env TOKEN")
+	rootCmd.PersistentFlags().StringVarP(&flagToken, "token", "t", "", "Bearer token (overrides env TOKEN)")
 	rootCmd.PersistentFlags().StringArrayVarP(&flagHeaders, "header", "H", nil, "Header in Key:Value format (repeatable)")
 	rootCmd.PersistentFlags().StringVarP(&flagSave, "save", "s", "", "Save request with this name")
 	rootCmd.PersistentFlags().StringVarP(&flagCollection, "collection", "c", "default", "Collection to save into")
