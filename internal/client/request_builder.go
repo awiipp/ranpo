@@ -21,4 +21,12 @@ func buildRequest(r *resty.Request, req *models.Request, vars map[string]string)
 	case "basic":
 		r.SetBasicAuth(req.Auth.User, req.Auth.Pass)
 	}
+
+	// Body
+	if req.Body != "" {
+		if r.Header.Get("Content-Type") == "" {
+			r.SetHeader("Content-Type", "application/json")
+		}
+		r.SetBody(Resolve(req.Body, vars))
+	}
 }

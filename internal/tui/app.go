@@ -124,14 +124,3 @@ func (m AppModel) View() string {
 	}
 	return ""
 }
-
-func Launch() error {
-	p := tea.NewProgram(
-		NewApp(),
-		tea.WithAltScreen(),
-		tea.WithMouseCellMotion(),
-	)
-
-	_, err := p.Run()
-	return err
-}
