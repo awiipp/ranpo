@@ -84,6 +84,14 @@ func (m RequestFormModel) Update(msg tea.Msg) (RequestFormModel, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
+		case "ctrl+r":
+			if !m.loading {
+				m.loading = true
+				m.err = nil
+				m.savedName = ""
+				return m, m.doSend()
+			}
+
 		case "esc":
 			return m, navCmd(ScreenHome, "")
 
@@ -96,14 +104,6 @@ func (m RequestFormModel) Update(msg tea.Msg) (RequestFormModel, tea.Cmd) {
 			m.focused = (m.focused - 1 + fieldCount) % fieldCount
 			m = m.syncFocus()
 			return m, textinput.Blink
-
-		case "ctrl+s", "ctrl+enter":
-			if !m.loading {
-				m.loading = true
-				m.err = nil
-				m.savedName = ""
-				return m, m.doSend()
-			}
 		}
 
 	case responseMsg:
