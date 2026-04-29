@@ -18,7 +18,7 @@ type ResponseModel struct {
 }
 
 func NewResponseModel(resp *models.Response, w int, h int) ResponseModel {
-	vp := viewport.New(w-4, h-6)
+	vp := viewport.New(w-4, h-10)
 	m := ResponseModel{resp: resp, viewport: vp, ready: true}
 
 	m.viewport.SetContent(m.buildContent())
@@ -92,10 +92,11 @@ func (m ResponseModel) View() string {
 		h = labelStyle.Render("headers")
 	}
 
-	sb.WriteString("  " + b + dimStyle.Render(" [1]") + "    " + h + dimStyle.Render(" [2]") + "\n")
-	sb.WriteString("  " + dividerLine(48) + "\n\n")
+	sb.WriteString("         view:  " + b + dimStyle.Render(" [1]") + "  " + h + dimStyle.Render(" [2]") + "\n")
+	sb.WriteString("  " + dividerLine(70) + "\n\n")
 
-	sb.WriteString("  " + m.viewport.View() + "\n\n")
+	const bodyIndent = "  "
+	sb.WriteString(renderer.IndentBlock(m.viewport.View(), bodyIndent) + "\n\n")
 
 	pct := int(m.viewport.ScrollPercent() * 100)
 

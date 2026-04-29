@@ -14,7 +14,7 @@ func HeadersView(headers map[string][]string) string {
 	return sb.String()
 }
 
-func indentBlock(s string, indent string) string {
+func IndentBlock(s string, indent string) string {
 	lines := strings.Split(s, "\n")
 
 	for i, line := range lines {

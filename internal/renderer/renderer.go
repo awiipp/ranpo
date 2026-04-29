@@ -11,7 +11,7 @@ func RenderResponse(code int, status string, body []byte, duration fmt.Stringer)
 	statusLine := StatusLine(code, status, duration, len(body))
 
 	const bodyIndent = "  "
-	formattedBody := indentBlock(PrettyJSON(body), bodyIndent)
+	formattedBody := IndentBlock(PrettyJSON(body), bodyIndent)
 
 	return fmt.Sprintf("\n%s\n%s\n\n%s\n", statusLine, divider, formattedBody)
 }

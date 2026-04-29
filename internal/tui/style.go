@@ -40,9 +40,9 @@ var (
 				BorderForeground(lipgloss.Color(colorBorder)).
 				Padding(0, 1)
 
-	statusOKStyle    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color(colorGreen))
-	statusWarnStyle  = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color(colorOrange))
-	statusErrorStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color(colorRed))
+	statusOKStyle    = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#000000")).Background(lipgloss.Color("114")).Padding(0, 1)
+	statusWarnStyle  = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#000000")).Background(lipgloss.Color("215")).Padding(0, 1)
+	statusErrorStyle = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#000000")).Background(lipgloss.Color("204")).Padding(0, 1)
 	successStyle     = lipgloss.NewStyle().Foreground(lipgloss.Color(colorGreen))
 	errorStyle       = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color(colorRed))
 
@@ -92,7 +92,7 @@ func helpBar(pairs ...string) string {
 
 func dividerLine(width int) string {
 	if width <= 0 {
-		width = 48
+		width = 70
 	}
 	return dimmerStyle.Render(strings.Repeat("─", width))
 }
