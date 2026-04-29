@@ -61,7 +61,11 @@ func (m AppModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case tea.KeyMsg:
 		if msg.String() == "ctrl+c" {
-			return m, tea.Quit
+			if m.screen == ScreenHome {
+				return m, tea.Quit
+			}
+
+			return m, nil
 		}
 	}
 

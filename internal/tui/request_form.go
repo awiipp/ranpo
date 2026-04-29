@@ -175,7 +175,7 @@ func (m RequestFormModel) View() string {
 	}
 
 	sb.WriteString("\n")
-	sb.WriteString(helpBar("tab", "next field", "shift+tab", "prev", "ctrl+s", "send", "esc", "home"))
+	sb.WriteString(helpBar("tab", "next field", "shift+tab", "prev", "ctrl+r", "send", "esc", "home"))
 	return sb.String()
 }
 

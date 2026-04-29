@@ -6,7 +6,6 @@ func Launch() error {
 	p := tea.NewProgram(
 		NewApp(),
 		tea.WithAltScreen(),
-		tea.WithMouseCellMotion(),
 	)
 
 	_, err := p.Run()
@@ -24,7 +23,6 @@ func LaunchWithRequest(method, url string) error {
 	p := tea.NewProgram(
 		app,
 		tea.WithAltScreen(),
-		tea.WithMouseAllMotion(),
 	)
 
 	_, err := p.Run()
