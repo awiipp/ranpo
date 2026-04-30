@@ -9,6 +9,8 @@ import (
 
 func buildRequest(r *resty.Request, req *models.Request, vars map[string]string) {
 	// Headers
+	r.SetHeader("Accept", "application/json")
+
 	for k, v := range req.Headers {
 		r.SetHeader(k, Resolve(v, vars))
 	}
