@@ -1,6 +1,7 @@
 package tui
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -230,6 +231,10 @@ func (m RequestFormModel) doSend() tea.Cmd {
 			Body:    m.bodyArea.Value(),
 			Auth:    auth,
 			Headers: map[string]string{},
+		}
+
+		if strings.TrimSpace(req.Body) != "" && !json.Valid([]byte(req.Body)) {
+			return responseMsg{err: fmt.Errorf("invalid JSON body")}
 		}
 
 		// Persist if name given
