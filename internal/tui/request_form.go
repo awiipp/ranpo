@@ -21,6 +21,7 @@ const (
 	fieldURL formField = iota
 	fieldToken
 	fieldBody
+	fieldCollection
 	fieldSave
 	fieldCount
 )
@@ -31,15 +32,16 @@ type responseMsg struct {
 }
 
 type RequestFormModel struct {
-	method     string
-	urlInput   textinput.Model
-	tokenInput textinput.Model
-	saveInput  textinput.Model
-	bodyArea   textarea.Model
-	focused    formField
-	loading    bool
-	savedName  string
-	err        error
+	method          string
+	urlInput        textinput.Model
+	tokenInput      textinput.Model
+	collectionInput textinput.Model
+	saveInput       textinput.Model
+	bodyArea        textarea.Model
+	focused         formField
+	loading         bool
+	savedName       string
+	err             error
 }
 
 func NewRequestFormModel(method string) RequestFormModel {
@@ -55,6 +57,10 @@ func NewRequestFormModel(method string) RequestFormModel {
 	token.EchoMode = textinput.EchoPassword
 	token.EchoCharacter = '•'
 
+	collection := textinput.New()
+	collection.Placeholder = "collection name (default: \"default\")"
+	collection.Width = 66
+
 	save := textinput.New()
 	save.Placeholder = "name to save (leave empty to skip)"
 	save.Width = 66
@@ -66,12 +72,13 @@ func NewRequestFormModel(method string) RequestFormModel {
 	body.ShowLineNumbers = false
 
 	return RequestFormModel{
-		method:     method,
-		urlInput:   url,
-		tokenInput: token,
-		saveInput:  save,
-		bodyArea:   body,
-		focused:    fieldURL,
+		method:          method,
+		urlInput:        url,
+		tokenInput:      token,
+		collectionInput: collection,
+		saveInput:       save,
+		bodyArea:        body,
+		focused:         fieldURL,
 	}
 }
 
@@ -127,6 +134,8 @@ func (m RequestFormModel) Update(msg tea.Msg) (RequestFormModel, tea.Cmd) {
 		m.tokenInput, cmd = m.tokenInput.Update(msg)
 	case fieldBody:
 		m.bodyArea, cmd = m.bodyArea.Update(msg)
+	case fieldCollection:
+		m.collectionInput, cmd = m.collectionInput.Update(msg)
 	case fieldSave:
 		m.saveInput, cmd = m.saveInput.Update(msg)
 	}
@@ -139,6 +148,7 @@ func (m RequestFormModel) syncFocus() RequestFormModel {
 	m.urlInput.Blur()
 	m.tokenInput.Blur()
 	m.bodyArea.Blur()
+	m.collectionInput.Blur()
 	m.saveInput.Blur()
 
 	switch m.focused {
@@ -148,6 +158,8 @@ func (m RequestFormModel) syncFocus() RequestFormModel {
 		m.tokenInput.Focus()
 	case fieldBody:
 		m.bodyArea.Focus()
+	case fieldCollection:
+		m.collectionInput.Focus()
 	case fieldSave:
 		m.saveInput.Focus()
 	}
@@ -164,6 +176,7 @@ func (m RequestFormModel) View() string {
 	sb.WriteString(m.renderInput("URL", m.urlInput.View(), m.focused == fieldURL))
 	sb.WriteString(m.renderInput("Token", m.tokenInput.View(), m.focused == fieldToken))
 	sb.WriteString(m.renderBody())
+	sb.WriteString(m.renderInput("Collection", m.collectionInput.View(), m.focused == fieldCollection))
 	sb.WriteString(m.renderInput("Save as", m.saveInput.View(), m.focused == fieldSave))
 
 	switch {
@@ -241,9 +254,14 @@ func (m RequestFormModel) doSend() tea.Cmd {
 		if name := strings.TrimSpace(m.saveInput.Value()); name != "" {
 			req.Name = name
 
-			col, _ := store.LoadCollection("default")
+			colName := strings.TrimSpace(m.collectionInput.Value())
+			if colName == "" {
+				colName = "default"
+			}
+
+			col, _ := store.LoadCollection(colName)
 			if col == nil {
-				col = &models.Collection{Name: "default"}
+				col = &models.Collection{Name: colName}
 			}
 
 			replaced := false
